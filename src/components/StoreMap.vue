@@ -1,0 +1,200 @@
+<template>
+  <div class="space-y-3">
+    <!-- 검색창 입력 영역 -->
+    <div class="relative" v-if="!disabled">
+      <input 
+        v-model="storeQuery" 
+        @input="handleInput"
+        type="text" 
+        placeholder="매장 이름 검색 (예: 현대, 롯데, 신세계, 스타필드 등)" 
+        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all font-medium"
+      >
+      <!-- 검색 자동완성 드롭다운 -->
+      <div v-if="filteredStores.length > 0 && showSuggestions" class="absolute z-[1001] w-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-lg max-h-56 overflow-y-auto divide-y divide-slate-100">
+        <div 
+          v-for="store in filteredStores" 
+          :key="store.id"
+          @click="selectStore(store)"
+          class="p-3 hover:bg-slate-50 cursor-pointer transition-all flex items-center justify-between"
+        >
+          <div>
+            <div class="text-sm font-bold text-slate-900">{{ store.name }}</div>
+            <div class="text-xs text-slate-500 mt-0.5">
+              <AppIcon name="location" class="text-slate-400 mr-1" />{{ store.address }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 선택된 상점 피드백 정보 카드 -->
+    <div v-if="modelValue" class="bg-indigo-50/50 rounded-2xl p-4 border border-indigo-100 flex items-start justify-between">
+      <div class="space-y-1">
+        <div class="text-xs text-indigo-600 font-bold uppercase tracking-wider">연동된 쇼핑 매장 정보</div>
+        <h4 class="text-sm font-extrabold text-slate-900">{{ modelValue.name }}</h4>
+        <p class="text-xs text-slate-600">{{ modelValue.address }}</p>
+      </div>
+      <button 
+        v-if="!disabled" 
+        type="button" 
+        @click="clearStore" 
+        class="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-white border border-rose-100 rounded-lg px-2.5 py-1 transition-all"
+      >
+        선택 해제
+      </button>
+    </div>
+
+    <!-- Leaflet 지도 영역 -->
+    <div class="relative h-60 w-full rounded-2xl border border-slate-200 overflow-hidden shadow-inner bg-slate-100">
+      <div :id="mapId" class="h-full w-full z-0"></div>
+      <!-- 미선택 시 레이어 가이드 -->
+      <div v-if="!modelValue && !disabled" class="absolute inset-0 bg-slate-900/40 z-10 flex flex-col items-center justify-center text-white p-4 text-center">
+        <AppIcon name="map" size="1.35em" class="text-2xl mb-2" />
+        <h5 class="font-bold text-sm">리뷰할 쇼핑 오프라인 매장이 있다면 검색하여 지도를 연동해 보세요</h5>
+        <p class="text-[11px] text-slate-200 mt-1">온라인 구매나 일반 글의 경우 지도 등록 없이 진행 가능합니다.</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted, watch, nextTick, onBeforeUnmount } from 'vue';
+import AppIcon from './AppIcon.vue';
+
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    default: null
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  mapId: {
+    type: String,
+    default: 'leaflet-store-map'
+  }
+});
+
+const emit = defineEmits(['update:modelValue']);
+
+// 모의 매장 정보 리스트 (의뢰서 기반 필수 랜드마크 데이터셋)
+const storesData = [
+  { id: 1, name: "더현대 서울 (The Hyundai Seoul)", address: "서울특별시 영등포구 여의대로 108", latitude: 37.5259, longitude: 126.9278 },
+  { id: 2, name: "롯데월드몰 (Lotte World Mall)", address: "서울특별시 송파구 올림픽로 300", latitude: 37.5137, longitude: 127.1044 },
+  { id: 3, name: "신세계백화점 본점", address: "서울특별시 중구 소공로 63", latitude: 37.5609, longitude: 126.9810 },
+  { id: 4, name: "스타필드 코엑스몰", address: "서울특별시 강남구 영동대로 513", latitude: 37.5117, longitude: 127.0592 },
+  { id: 5, name: "아이파크몰 용산점", address: "서울특별시 용산구 한강대로23길 55", latitude: 37.5294, longitude: 126.9639 },
+  { id: 6, name: "현대백화점 판교점", address: "경기도 성남시 분당구 판교역로146번길 20", latitude: 37.3925, longitude: 127.1120 }
+];
+
+const storeQuery = ref('');
+const showSuggestions = ref(false);
+let mapInstance = null;
+let markerInstance = null;
+
+const filteredStores = computed(() => {
+  if (!storeQuery.value.trim()) return [];
+  return storesData.filter(store => 
+    store.name.toLowerCase().includes(storeQuery.value.toLowerCase()) ||
+    store.address.toLowerCase().includes(storeQuery.value.toLowerCase())
+  );
+});
+
+const handleInput = () => {
+  showSuggestions.value = true;
+};
+
+const selectStore = (store) => {
+  emit('update:modelValue', store);
+  showSuggestions.value = false;
+  storeQuery.value = store.name;
+  updateMap(store.latitude, store.longitude, store.name);
+};
+
+const clearStore = () => {
+  emit('update:modelValue', null);
+  storeQuery.value = '';
+  if (markerInstance && mapInstance) {
+    mapInstance.removeLayer(markerInstance);
+    markerInstance = null;
+  }
+};
+
+// 지도 초기화 및 마커 동적 갱신 핵심 로직
+const initMap = () => {
+  nextTick(() => {
+    const container = document.getElementById(props.mapId);
+    if (!container) return;
+
+    const defaultLat = props.modelValue ? props.modelValue.latitude : 37.56;
+    const defaultLng = props.modelValue ? props.modelValue.longitude : 126.97;
+
+    if (!mapInstance) {
+      mapInstance = L.map(props.mapId).setView([defaultLat, defaultLng], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(mapInstance);
+    } else {
+      mapInstance.setView([defaultLat, defaultLng], 12);
+    }
+
+    if (props.modelValue) {
+      updateMap(props.modelValue.latitude, props.modelValue.longitude, props.modelValue.name);
+    }
+  });
+};
+
+const updateMap = (lat, lng, name) => {
+  if (!mapInstance) return;
+
+  if (markerInstance) {
+    mapInstance.removeLayer(markerInstance);
+  }
+
+  markerInstance = L.marker([lat, lng]).addTo(mapInstance)
+    .bindPopup(`<b style="font-size:12px;">${name}</b>`)
+    .openPopup();
+  mapInstance.setView([lat, lng], 14);
+};
+
+watch(() => props.modelValue, (newVal) => {
+  if (newVal) {
+    storeQuery.value = newVal.name;
+    nextTick(() => {
+      if (!mapInstance) {
+        initMap();
+      } else {
+        updateMap(newVal.latitude, newVal.longitude, newVal.name);
+      }
+    });
+  } else {
+    storeQuery.value = '';
+    if (markerInstance && mapInstance) {
+      mapInstance.removeLayer(markerInstance);
+      markerInstance = null;
+    }
+  }
+}, { deep: true });
+
+onMounted(() => {
+  initMap();
+  if (props.modelValue) {
+    storeQuery.value = props.modelValue.name;
+  }
+});
+
+onBeforeUnmount(() => {
+  if (mapInstance) {
+    mapInstance.remove();
+    mapInstance = null;
+  }
+});
+</script>
+
+<style scoped>
+/* 격리된 맵 스타일 정의 */
+.leaflet-container {
+  z-index: 1;
+}
+</style>

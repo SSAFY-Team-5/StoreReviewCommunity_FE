@@ -195,3 +195,7 @@ export async function fetchChat(message: string) {
     body: JSON.stringify({ message })
   })
 }
+
+export async function fetchStatistics() {
+  return requestJson<StoreApiItem[]>(`/api/stores`)
+}

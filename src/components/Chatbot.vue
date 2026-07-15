@@ -8,7 +8,7 @@
     >
       <span class="absolute -top-1.5 -right-1 flex h-4 w-4">
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-4 w-4 bg-violet-500 text-[9px] text-white font-bold items-center justify-center">AI</span>
+        <span class="relative inline-flex rounded-full h-4 w-4 bg-violet-600 text-[9px] text-white font-bold items-center justify-center">AI</span>
       </span>
         <AppIcon name="chat" size="1.35em" class="text-2xl group-hover:rotate-12 transition-transform duration-300" />
     </button>

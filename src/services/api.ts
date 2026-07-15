@@ -83,6 +83,16 @@ export type ChatResponse = {
   stores: StoreApiItem[]
 }
 
+export type TodayTopStore = {
+  title: string
+  review_count: number
+}
+
+export type TodayTopStatistics = {
+  date: string
+  top_stores: TodayTopStore[]
+}
+
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const hasBody = init?.body !== undefined && init?.body !== null
   const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -194,6 +204,10 @@ export async function fetchChat(message: string) {
     method: 'POST',
     body: JSON.stringify({ message })
   })
+}
+
+export async function fetchTodayTopStores() {
+  return requestJson<TodayTopStatistics>(`/api/statistics/today-top`)
 }
 
 export async function fetchStatistics() {

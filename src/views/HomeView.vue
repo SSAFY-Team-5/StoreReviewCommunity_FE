@@ -3,9 +3,14 @@
     <!-- 비주얼 쇼핑 테마 배너 -->
     <div class="relative rounded-3xl overflow-hidden shadow-lg shadow-indigo-100 min-h-[320px] sm:min-h-[360px]">
       <img
-        src="/img/lottetower.jpg"
+        v-for="(image, index) in bannerImages"
+        :key="image"
+        :src="image"
         alt="롯데타워 전경"
-        class="absolute inset-0 h-full w-full object-cover"
+        :class="[
+          'absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-in-out',
+          index === currentBannerIndex ? 'opacity-100' : 'opacity-0'
+        ]"
       >
       <div class="absolute inset-0 bg-gradient-to-r from-indigo-950/90 via-indigo-900/30 to-indigo-700/20"></div>
       <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl"></div>
@@ -144,26 +149,24 @@
       <div class="px-5 py-5 border-b border-slate-200">
         <div class="flex items-center justify-between gap-3">
           <h3 class="text-base font-bold text-slate-900">인기 매장 랭킹</h3>
-          <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-700">리뷰 수 기준</span>
+          <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-indigo-400">리뷰 수 기준</span>
         </div>
         <p class="mt-1 text-xs text-slate-400">오늘 가장 많이 이야기되는 매장이에요.</p>
       </div>
 
-      <ol v-if="rankingStores.length" class="divide-y divide-slate-100 px-5">
-        <li v-for="(store, index) in rankingStores" :key="store.id" class="flex items-center gap-3 py-4">
+      <ol v-if="props.rankingStores.length" class="divide-y divide-slate-100 px-5">
+        <li v-for="(store, index) in props.rankingStores" :key="store.title" class="flex items-center gap-3 py-4">
           <span
             :class="[
-              'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-extrabold',
-              index === 0 ? 'bg-amber-400 text-white shadow-sm shadow-amber-200' :
-              index === 1 ? 'bg-slate-300 text-white' :
-              index === 2 ? 'bg-orange-200 text-orange-800' : 'bg-slate-100 text-slate-500'
+              'flex h-7 w-7 shrink-0 items-center justify-center text-xs font-extrabold',
+              index < 3 ? 'text-lg leading-none' : 'rounded-lg bg-slate-100 text-slate-500'
             ]"
-          >{{ index + 1 }}</span>
+            :aria-label="`${index + 1}위`"
+          >{{ index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1 }}</span>
           <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-semibold text-slate-800">{{ store.name }}</p>
-            <p class="mt-0.5 truncate text-xs text-slate-400">{{ store.address }}</p>
+            <p class="truncate text-sm font-semibold text-slate-800">{{ store.title }}</p>
           </div>
-          <span class="shrink-0 text-xs font-bold text-indigo-600">{{ store.reviewCount }}개</span>
+          <span class="shrink-0 text-xs font-bold text-violet-500">{{ store.review_count }}개</span>
         </li>
       </ol>
 
@@ -176,13 +179,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onBeforeUnmount, onMounted } from 'vue';
 import AppIcon from '../components/AppIcon.vue';
 
 const props = defineProps({
   posts: {
     type: Array,
     required: true
+  },
+  rankingStores: {
+    type: Array,
+    default: () => []
   }
 });
 
@@ -191,15 +198,27 @@ const emit = defineEmits(['write', 'detail']);
 const searchQuery = ref('');
 const activeSearchKeyword = ref('');
 const currentPage = ref(1);
+const bannerImages = [
+  '/img/seoul1.jpg',
+  '/img/seoul2.jpg',
+  '/img/seoul3.jpg',
+  '/img/seoul4.jpeg',
+  '/img/seoul5.jpeg',
+  '/img/seoul6.jpeg'
+];
+const currentBannerIndex = ref(0);
+let bannerTimer;
 
-// API 명세가 확정되면 이 배열을 백엔드 응답으로 교체합니다.
-const rankingStores = ref([
-  { id: 'rank-1', name: '성수연방', address: '서울 성동구 성수이로', reviewCount: 28 },
-  { id: 'rank-2', name: '카페 어니언 성수', address: '서울 성동구 아차산로9길', reviewCount: 21 },
-  { id: 'rank-3', name: '대림창고', address: '서울 성동구 성수이로', reviewCount: 18 },
-  { id: 'rank-4', name: '서울숲 카페거리', address: '서울 성동구 서울숲2길', reviewCount: 14 },
-  { id: 'rank-5', name: '뚝섬한강공원', address: '서울 광진구 강변북로', reviewCount: 11 }
-]);
+onMounted(() => {
+  bannerTimer = window.setInterval(() => {
+    currentBannerIndex.value = (currentBannerIndex.value + 1) % bannerImages.length;
+  }, 10000);
+});
+
+onBeforeUnmount(() => {
+  window.clearInterval(bannerTimer);
+});
+
 const itemsPerPage = 20; // 20개 고정 노출
 
 const filteredPosts = computed(() => {

@@ -10,11 +10,13 @@ import {
   deletePost,
   fetchPostDetail,
   fetchPosts,
+  fetchTodayTopStores,
   mapPostSummary,
   mapPostDetail,
   type PostDetail,
   type PostSummary,
   type StoreOption,
+  type TodayTopStore,
   updatePost
 } from './services/api'
 
@@ -24,6 +26,7 @@ const currentView = ref<'home' | 'write' | 'detail'>('home')
 // 2. 선택된 권역 정보 (의뢰서 기준 5개 권역 중 '서울'을 기본값으로 설정) [cite: 10, 63]
 const selectedRegion = ref('서울') 
 const posts = ref<PostSummary[]>([])
+const rankingStores = ref<TodayTopStore[]>([])
 
 const selectedPost = ref<PostDetail | null>(null)
 const editPostData = ref<{
@@ -57,6 +60,15 @@ const loadPosts = async () => {
     posts.value = []
   } finally {
     isLoadingPosts.value = false
+  }
+}
+
+const loadRankingStores = async () => {
+  try {
+    const response = await fetchTodayTopStores()
+    rankingStores.value = response.top_stores.slice(0, 5)
+  } catch {
+    rankingStores.value = []
   }
 }
 
@@ -177,6 +189,7 @@ const handleDeletePost = async (payload: { postId: number; password: string }) =
 
 onMounted(() => {
   void loadPosts()
+  void loadRankingStores()
 })
 </script>
 
@@ -223,6 +236,7 @@ onMounted(() => {
         <HomeView 
           v-if="currentView === 'home'" 
           :posts="posts" 
+          :ranking-stores="rankingStores"
           @write="goWrite" 
           @detail="goDetail"
         />

@@ -47,6 +47,7 @@
     </div>
 
     <!-- 리뷰 리스트 보드 -->
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
     <div class="bg-white rounded-2xl border border-slate-300 shadow-md shadow-slate-100 overflow-hidden">
       <div class="px-6 py-5 border-b border-slate-200 flex items-center justify-between">
         <h3 class="text-base font-bold text-slate-900">
@@ -138,6 +139,39 @@
         </button>
       </div>
     </div>
+
+    <aside class="bg-white rounded-2xl border border-slate-300 shadow-md shadow-slate-100 overflow-hidden">
+      <div class="px-5 py-5 border-b border-slate-200">
+        <div class="flex items-center justify-between gap-3">
+          <h3 class="text-base font-bold text-slate-900">인기 매장 랭킹</h3>
+          <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-700">리뷰 수 기준</span>
+        </div>
+        <p class="mt-1 text-xs text-slate-400">오늘 가장 많이 이야기되는 매장이에요.</p>
+      </div>
+
+      <ol v-if="rankingStores.length" class="divide-y divide-slate-100 px-5">
+        <li v-for="(store, index) in rankingStores" :key="store.id" class="flex items-center gap-3 py-4">
+          <span
+            :class="[
+              'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-extrabold',
+              index === 0 ? 'bg-amber-400 text-white shadow-sm shadow-amber-200' :
+              index === 1 ? 'bg-slate-300 text-white' :
+              index === 2 ? 'bg-orange-200 text-orange-800' : 'bg-slate-100 text-slate-500'
+            ]"
+          >{{ index + 1 }}</span>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-semibold text-slate-800">{{ store.name }}</p>
+            <p class="mt-0.5 truncate text-xs text-slate-400">{{ store.address }}</p>
+          </div>
+          <span class="shrink-0 text-xs font-bold text-indigo-600">{{ store.reviewCount }}개</span>
+        </li>
+      </ol>
+
+      <div v-else class="flex min-h-52 items-center justify-center px-6 text-center">
+        <p class="text-sm leading-relaxed text-slate-400">게시글을 작성하여<br>매장을 알려보세요!</p>
+      </div>
+    </aside>
+    </div>
   </div>
 </template>
 
@@ -157,6 +191,15 @@ const emit = defineEmits(['write', 'detail']);
 const searchQuery = ref('');
 const activeSearchKeyword = ref('');
 const currentPage = ref(1);
+
+// API 명세가 확정되면 이 배열을 백엔드 응답으로 교체합니다.
+const rankingStores = ref([
+  { id: 'rank-1', name: '성수연방', address: '서울 성동구 성수이로', reviewCount: 28 },
+  { id: 'rank-2', name: '카페 어니언 성수', address: '서울 성동구 아차산로9길', reviewCount: 21 },
+  { id: 'rank-3', name: '대림창고', address: '서울 성동구 성수이로', reviewCount: 18 },
+  { id: 'rank-4', name: '서울숲 카페거리', address: '서울 성동구 서울숲2길', reviewCount: 14 },
+  { id: 'rank-5', name: '뚝섬한강공원', address: '서울 광진구 강변북로', reviewCount: 11 }
+]);
 const itemsPerPage = 20; // 20개 고정 노출
 
 const filteredPosts = computed(() => {

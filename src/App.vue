@@ -189,7 +189,7 @@ onMounted(() => {
             <img src="/img/logo.png" alt="SudoReview 로고" class="h-full w-full scale-110 object-contain" />
           </div>
           <div>
-            <span class="font-black text-lg tracking-tight text-slate-900">SudoReview</span>
+            <span class="font-black text-lg tracking-tight text-violet-500">SudoReview</span>
             <span class="text-[10px] bg-indigo-50 text-indigo-600 font-extrabold px-2 py-0.5 rounded-md ml-2 border border-indigo-100">
               {{ selectedRegion }} 권역
             </span>

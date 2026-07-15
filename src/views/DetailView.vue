@@ -13,7 +13,7 @@
       <div class="flex items-center space-x-2">
         <button
           @click="triggerAction('edit')"
-          class="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold rounded-xl transition-all flex items-center space-x-1.5"
+          class="px-3 py-1.5 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-semibold rounded-xl transition-all flex items-center space-x-1.5"
         >
           <AppIcon name="edit-square" />
           <span>수정</span>
@@ -32,7 +32,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- 본문 영역 -->
       <div class="lg:col-span-2 space-y-6">
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-300 shadow-sm p-6 sm:p-8 space-y-6">
           <div class="space-y-3">
             <div class="flex items-center space-x-2">
               <span
@@ -48,7 +48,7 @@
               {{ post.title }}
             </h2>
 
-            <div class="flex items-center justify-between text-slate-400 text-xs pt-2 border-b border-slate-100 pb-4">
+            <div class="flex items-center justify-between text-slate-400 text-xs pt-2 border-b border-slate-200 pb-4">
               <div class="flex items-center space-x-2">
                 <span class="w-6 h-6 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold uppercase text-[10px]">
                   {{ post.nickname.charAt(0) }}
@@ -72,7 +72,7 @@
 
       <!-- 사이드바: 맵 연동 구역 -->
       <div class="space-y-6">
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="bg-white rounded-2xl border border-slate-300 shadow-sm p-5 space-y-4">
           <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
             <AppIcon name="location" class="text-rose-500" />
             <span>리뷰 대상 위치</span>

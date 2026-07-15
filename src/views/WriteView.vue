@@ -2,7 +2,7 @@
   <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <button @click="handleCancel" class="w-9 h-9 rounded-xl border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-600 transition-colors">
+        <button @click="handleCancel" class="w-9 h-9 rounded-xl border border-slate-300 hover:bg-slate-100 flex items-center justify-center text-slate-600 transition-colors">
           <AppIcon name="arrow-left" />
         </button>
         <h2 class="text-xl font-bold text-slate-900">
@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-5">
+    <div class="bg-white rounded-2xl border border-slate-300 shadow-sm p-6 sm:p-8 space-y-5">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-2">익명 닉네임</label>
@@ -19,7 +19,7 @@
             v-model="formData.nickname" 
             type="text" 
             placeholder="익명 닉네임 입력" 
-            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
+            class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
             :disabled="isEditMode"
           >
         </div>
@@ -29,7 +29,7 @@
             v-model="formData.password" 
             type="password" 
             placeholder="비밀번호" 
-            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
+            class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
           >
         </div>
       </div>
@@ -40,7 +40,7 @@
           v-model="formData.title" 
           type="text" 
           placeholder="리뷰 게시글의 핵심 타이틀을 입력하세요." 
-          class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all font-semibold"
+          class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all font-semibold"
         >
       </div>
 
@@ -56,13 +56,13 @@
           v-model="formData.content" 
           rows="6" 
           placeholder="구매 과정, 실제 제품 퀄리티, 가성비 등 방문 또는 구매에 도움이 되는 팁을 자유롭게 적어보세요." 
-          class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all leading-relaxed"
+          class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all leading-relaxed"
         ></textarea>
       </div>
 
       <!-- 등록/취소 버튼 세션 -->
-      <div class="pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
-        <button type="button" @click="handleCancel" class="px-5 py-2.5 border border-slate-200 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-all">
+          <div class="pt-4 border-t border-slate-200 flex items-center justify-end space-x-3">
+        <button type="button" @click="handleCancel" class="px-5 py-2.5 border border-slate-300 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-all">
           취소하기
         </button>
         <button type="button" @click="handleSubmit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-100">

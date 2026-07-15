@@ -152,4 +152,8 @@ const formatDetailDate = (isoString) => {
   });
 };
 
+const storeForMap = computed(() => {
+  return props.post?.store || props.post?.selectedStore || null
+})
+
 </script>

@@ -185,8 +185,8 @@ onMounted(() => {
     <header class="sticky top-0 z-50 bg-white border-b border-slate-200/80 backdrop-blur-md">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <div class="flex items-center space-x-3 cursor-pointer" @click="goHome">
-          <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-100">
-            <AppIcon name="map-pin" size="1.1em" />
+          <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-md shadow-indigo-100 ring-1 ring-indigo-100 overflow-hidden">
+            <img src="/img/logo.png" alt="SudoReview 로고" class="h-full w-full scale-110 object-contain" />
           </div>
           <div>
             <span class="font-black text-lg tracking-tight text-slate-900">SudoReview</span>

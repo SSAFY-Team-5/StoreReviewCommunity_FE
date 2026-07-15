@@ -28,7 +28,7 @@
           <input 
             v-model="formData.password" 
             type="password" 
-            placeholder="비밀번호(평문 저장 및 대조)" 
+            placeholder="비밀번호" 
             class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
           >
         </div>

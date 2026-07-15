@@ -25,7 +25,7 @@
             <AppIcon name="robot" />
           </div>
           <div>
-            <h4 class="font-extrabold text-xs leading-tight">ShopHub 쇼핑 가이드</h4>
+            <h4 class="font-extrabold text-xs leading-tight">SudoReview 쇼핑 가이드</h4>
             <p class="text-[9px] text-indigo-100">AI 스마트 서포터</p>
           </div>
         </div>
@@ -44,7 +44,7 @@
           <ul class="list-disc list-inside space-y-0.5 text-slate-600 mt-1 pl-1">
             <li>"인기 오프라인 쇼핑몰 목록 알려줘"</li>
             <li>"더현대 서울 주소나 위치는 어디야?"</li>
-            <li>"ShopHub 서비스의 장점이 궁금해"</li>
+            <li>"SudoReview 서비스의 장점이 궁금해"</li>
           </ul>
         </div>
 
@@ -122,7 +122,7 @@ const isTyping = ref(false);
 const chatContainer = ref(null);
 
 const messages = ref([
-  { sender: 'bot', text: '안녕하세요! ShopHub 스마트 도우미입니다. 쇼핑 매장에 관련된 유용한 정보를 바로 물어보세요! 😊', time: '오후 12:00' }
+  { sender: 'bot', text: '안녕하세요! SudoReview 스마트 도우미입니다. 쇼핑 매장에 관련된 유용한 정보를 바로 물어보세요! 😊', time: '오후 12:00' }
 ]);
 
 const toggleChat = () => {

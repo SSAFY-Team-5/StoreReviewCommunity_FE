@@ -183,6 +183,13 @@ export async function updatePost(postId: number, payload: PostUpdatePayload) {
   })
 }
 
+export async function verifyPostPassword(postId: number, password: string) {
+  return requestJson(`/api/posts/${postId}/verify-password`, {
+    method: 'POST',
+    body: JSON.stringify({ password })
+  })
+}
+
 export async function deletePost(postId: number, payload: { password: string }) {
   return requestJson(`/api/posts/${postId}`, {
     method: 'DELETE',

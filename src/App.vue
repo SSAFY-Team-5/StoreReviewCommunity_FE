@@ -17,6 +17,7 @@ import {
   type PostSummary,
   type StoreOption,
   type TodayTopStore,
+  verifyPostPassword,
   updatePost
 } from './services/api'
 
@@ -119,6 +120,7 @@ const goEdit = async (postId: number) => {
 
 const handleEditRequest = async (payload: { postId: number; password: string }) => {
   try {
+    await verifyPostPassword(payload.postId, payload.password)
     const detail = selectedPost.value?.id === payload.postId ? selectedPost.value : mapPostDetail(await fetchPostDetail(payload.postId))
 
     editPostData.value = {
@@ -131,7 +133,7 @@ const handleEditRequest = async (payload: { postId: number; password: string }) 
     }
     currentView.value = 'write'
   } catch (error) {
-    alert(error instanceof Error ? error.message : '수정할 게시글을 불러오지 못했습니다.')
+    alert('비밀번호가 일치하지 않습니다.')
   }
 }
 
@@ -183,7 +185,7 @@ const handleDeletePost = async (payload: { postId: number; password: string }) =
     alert('게시글이 안전하게 삭제되었습니다.')
     goHome()
   } catch (error) {
-    alert(error instanceof Error ? error.message : '게시글 삭제에 실패했습니다.')
+    alert('비밀번호가 일치하지 않습니다.')
   }
 }
 
@@ -280,4 +282,5 @@ onMounted(() => {
 .fade-leave-to {
   opacity: 0;
 }
+
 </style>

@@ -139,5 +139,6 @@ const props = defineProps<{
     <g v-else-if="props.name === 'folder'">
       <path d="M4 7h6l2 2h8v8H4V7Z" />
     </g>
+
   </svg>
 </template>

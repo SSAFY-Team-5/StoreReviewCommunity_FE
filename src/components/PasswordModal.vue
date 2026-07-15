@@ -1,5 +1,6 @@
 <template>
-  <div v-if="show" class="fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-[2000] backdrop-blur-sm">
+  <Teleport to="body">
+  <div v-if="show" class="fixed inset-0 z-[9999] h-screen min-h-screen w-screen bg-slate-900/60 flex items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-sm w-full border border-slate-200 shadow-2xl overflow-hidden p-6 space-y-4">
       <div class="flex items-center space-x-3 text-slate-900">
         <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center">
@@ -34,6 +35,7 @@
       </div>
     </div>
   </div>
+  </Teleport>
 </template>
 
 <script setup>

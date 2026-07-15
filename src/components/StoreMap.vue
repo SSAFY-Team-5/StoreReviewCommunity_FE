@@ -86,12 +86,28 @@ const showSuggestions = ref(false);
 let mapInstance = null;
 let markerInstance = null;
 
+const normalizedStore = computed(() => {
+  const value = props.modelValue;
+  if (!value) return null;
+
+  return {
+    id: value.id || value.contentid || null,
+    name: value.name || value.title || '',
+    address: value.address || value.addr1 || '',
+    latitude: value.latitude ?? value.mapy ?? null,
+    longitude: value.longitude ?? value.mapx ?? null
+  };
+});
+
 const filteredStores = computed(() => {
   if (!storeQuery.value.trim()) return [];
-  return storesData.value.filter(store => 
-    store.name.toLowerCase().includes(storeQuery.value.toLowerCase()) ||
-    store.address.toLowerCase().includes(storeQuery.value.toLowerCase())
-  );
+  const keyword = storeQuery.value.toLowerCase();
+
+  return storesData.value.filter((store) => {
+    const storeName = (store.name || '').toLowerCase();
+    const storeAddress = (store.address || '').toLowerCase();
+    return storeName.includes(keyword) || storeAddress.includes(keyword);
+  });
 });
 
 const handleInput = () => {
@@ -99,15 +115,29 @@ const handleInput = () => {
 };
 
 const selectStore = (store) => {
-  emit('update:modelValue', store);
+  const selectedStore = {
+    ...store,
+    id: store.id ?? store.contentid ?? null,
+    name: store.name ?? store.title ?? '',
+    address: store.address ?? store.addr1 ?? '',
+    latitude: store.latitude ?? null,
+    longitude: store.longitude ?? null
+  };
+
+  emit('update:modelValue', selectedStore);
   showSuggestions.value = false;
-  storeQuery.value = store.name;
-  updateMap(store.latitude, store.longitude, store.name);
+  storeQuery.value = selectedStore.name;
+
+  if (selectedStore.latitude != null && selectedStore.longitude != null) {
+    updateMap(selectedStore.latitude, selectedStore.longitude, selectedStore.name);
+  }
 };
 
 const clearStore = () => {
   emit('update:modelValue', null);
   storeQuery.value = '';
+  showSuggestions.value = false;
+
   if (markerInstance && mapInstance) {
     mapInstance.removeLayer(markerInstance);
     markerInstance = null;
@@ -120,45 +150,60 @@ const initMap = () => {
     const container = document.getElementById(props.mapId);
     if (!container) return;
 
-    const defaultLat = props.modelValue ? props.modelValue.latitude : 37.56;
-    const defaultLng = props.modelValue ? props.modelValue.longitude : 126.97;
+    const defaultLat = normalizedStore.value?.latitude ?? 37.56;
+    const defaultLng = normalizedStore.value?.longitude ?? 126.97;
+    const initialZoom = 15;
 
     if (!mapInstance) {
-      mapInstance = L.map(props.mapId).setView([defaultLat, defaultLng], 12);
+      mapInstance = L.map(props.mapId).setView([defaultLat, defaultLng], initialZoom);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(mapInstance);
     } else {
-      mapInstance.setView([defaultLat, defaultLng], 12);
+      mapInstance.setView([defaultLat, defaultLng], initialZoom);
     }
 
-    if (props.modelValue) {
-      updateMap(props.modelValue.latitude, props.modelValue.longitude, props.modelValue.name);
+    mapInstance.invalidateSize();
+
+    if (normalizedStore.value?.latitude != null && normalizedStore.value?.longitude != null) {
+      updateMap(normalizedStore.value.latitude, normalizedStore.value.longitude, normalizedStore.value.name);
     }
   });
 };
 
 const updateMap = (lat, lng, name) => {
-  if (!mapInstance) return;
+  if (!mapInstance || lat == null || lng == null) return;
 
   if (markerInstance) {
     mapInstance.removeLayer(markerInstance);
   }
 
-  markerInstance = L.marker([lat, lng]).addTo(mapInstance)
+  markerInstance = L.circleMarker([lat, lng], {
+    radius: 8,
+    color: '#dc2626',
+    fillColor: '#ef4444',
+    fillOpacity: 1,
+    weight: 2
+  })
+    .addTo(mapInstance)
     .bindPopup(`<b style="font-size:12px;">${name}</b>`)
     .openPopup();
-  mapInstance.setView([lat, lng], 14);
+
+  mapInstance.setView([lat, lng], 15);
+  setTimeout(() => {
+    mapInstance.invalidateSize();
+    mapInstance?.setView([lat, lng], 15);
+  }, 180);
 };
 
 watch(() => props.modelValue, (newVal) => {
   if (newVal) {
-    storeQuery.value = newVal.name;
+    storeQuery.value = normalizedStore.value?.name || '';
     nextTick(() => {
       if (!mapInstance) {
         initMap();
       } else {
-        updateMap(newVal.latitude, newVal.longitude, newVal.name);
+        updateMap(normalizedStore.value?.latitude, normalizedStore.value?.longitude, normalizedStore.value?.name);
       }
     });
   } else {
@@ -181,8 +226,8 @@ onMounted(() => {
   })();
 
   initMap();
-  if (props.modelValue) {
-    storeQuery.value = props.modelValue.name;
+  if (normalizedStore.value) {
+    storeQuery.value = normalizedStore.value.name;
   }
 });
 

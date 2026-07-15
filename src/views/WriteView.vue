@@ -105,7 +105,7 @@ const syncEditData = () => {
       title: props.editData.title ?? '',
       content: props.editData.content ?? '',
       nickname: props.editData.nickname ?? '익명',
-      password: '',
+      password: props.editData.password ?? '',
       selectedStore: props.editData.selectedStore ?? null
     };
   } else {

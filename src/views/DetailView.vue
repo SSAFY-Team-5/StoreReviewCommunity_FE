@@ -113,18 +113,15 @@ const currentAction = ref(''); // 'edit', 'delete'
 const goBack = () => emit('back');
 
 const triggerAction = (action) => {
-  if (action === 'edit') {
-    emit('edit', props.post.id);
-    return;
-  }
-
   currentAction.value = action;
   showModal.value = true;
 };
 
 const onAuthConfirmed = (password) => {
   showModal.value = false;
-  if (currentAction.value === 'delete') {
+  if (currentAction.value === 'edit') {
+    emit('edit', { postId: props.post.id, password });
+  } else if (currentAction.value === 'delete') {
     emit('delete', { postId: props.post.id, password });
   }
 };

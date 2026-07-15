@@ -44,10 +44,6 @@ const props = defineProps({
   show: {
     type: Boolean,
     default: false
-  },
-  correctPassword: {
-    type: String,
-    required: true
   }
 });
 
@@ -68,11 +64,12 @@ const handleClose = () => {
 };
 
 const handleConfirm = () => {
-  if (passwordInput.value === props.correctPassword) {
-    isError.value = false;
-    emit('confirm', passwordInput.value);
-  } else {
+  if (!passwordInput.value.trim()) {
     isError.value = true;
+    return;
   }
+
+  isError.value = false;
+  emit('confirm', passwordInput.value);
 };
 </script>

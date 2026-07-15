@@ -1,16 +1,25 @@
 <template>
   <div class="space-y-6">
     <!-- 비주얼 쇼핑 테마 배너 -->
-    <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-8 sm:p-10 text-white relative overflow-hidden shadow-lg shadow-indigo-100">
+    <div class="relative rounded-3xl overflow-hidden shadow-lg shadow-indigo-100 min-h-[320px] sm:min-h-[360px]">
+      <img
+        src="/img/lottetower.jpg"
+        alt="롯데타워 전경"
+        class="absolute inset-0 h-full w-full object-cover"
+      >
+      <div class="absolute inset-0 bg-gradient-to-r from-indigo-950/90 via-indigo-900/30 to-indigo-700/20"></div>
       <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl"></div>
       <div class="absolute right-1/4 -top-10 w-48 h-48 bg-indigo-500/20 rounded-full blur-xl"></div>
-      
-      <div class="max-w-2xl relative z-10 space-y-3">
-        <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">솔직 담백한 쇼핑 수다</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">익명 쇼핑 리뷰 커뮤니티 ShopHub</h2>
-        <p class="text-indigo-100 text-xs sm:text-sm leading-relaxed">
-          광고와 협찬 없이, 소비자가 직접 남기는 익명 구매 후기 공간입니다. 온·오프라인 매장 리뷰부터 핫한 아이템 추천까지 솔직하게 공유해 보세요!
-        </p>
+
+      <div class="relative z-10 p-8 sm:p-10 h-full flex items-end">
+        <div class="max-w-2xl space-y-3">
+          <span class="inline-flex bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">솔직 담백한 매장 뒷담</span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">익명 서울 · 경기 쇼핑 리뷰 커뮤니티! SudoReview</h2>
+          <div class="py-3"/>
+          <p class="text-indigo-100 text-xs sm:text-sm leading-relaxed max-w-xl">
+            광고와 협찬 없이, 소비자가 직접 남기는 익명 매장 후기 공간입니다. 온·오프라인 매장 리뷰부터 핫한 아이템 추천까지 솔직하게 공유해 보세요!
+          </p>
+        </div>
       </div>
     </div>
 

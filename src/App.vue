@@ -105,6 +105,24 @@ const goEdit = async (postId: number) => {
   }
 }
 
+const handleEditRequest = async (payload: { postId: number; password: string }) => {
+  try {
+    const detail = selectedPost.value?.id === payload.postId ? selectedPost.value : mapPostDetail(await fetchPostDetail(payload.postId))
+
+    editPostData.value = {
+      id: detail.id,
+      title: detail.title,
+      content: detail.content,
+      nickname: detail.nickname,
+      password: payload.password,
+      selectedStore: detail.store
+    }
+    currentView.value = 'write'
+  } catch (error) {
+    alert(error instanceof Error ? error.message : '수정할 게시글을 불러오지 못했습니다.')
+  }
+}
+
 // 글 등록 및 수정 완료 핸들러
 const handleSubmitPost = async (postData: {
   id: number | null
@@ -171,9 +189,9 @@ onMounted(() => {
             <AppIcon name="map-pin" size="1.1em" />
           </div>
           <div>
-            <span class="font-black text-lg tracking-tight text-slate-900">LocalHub</span>
+            <span class="font-black text-lg tracking-tight text-slate-900">SudoReview</span>
             <span class="text-[10px] bg-indigo-50 text-indigo-600 font-extrabold px-2 py-0.5 rounded-md ml-2 border border-indigo-100">
-              {{ selectedRegion }} 권역 [cite: 10, 63]
+              {{ selectedRegion }} 권역
             </span>
           </div>
         </div>
@@ -220,7 +238,7 @@ onMounted(() => {
           v-else-if="currentView === 'detail' && selectedPost" 
           :post="selectedPost" 
           @back="goHome"
-          @edit="goEdit"
+          @edit="handleEditRequest"
           @delete="handleDeletePost"
         />
       </transition>
@@ -228,8 +246,8 @@ onMounted(() => {
 
     <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
       <div class="max-w-7xl mx-auto px-4">
-        <p class="font-bold text-slate-500 mb-1">© 2026 LocalHub. All rights reserved.</p>
-        <p>본 서비스는 공공데이터를 기반으로 구축된 익명 지역 정보 커뮤니티 공간입니다. [cite: 3, 10]</p>
+        <p class="font-bold text-slate-500 mb-1">© 2026 SudoReview. All rights reserved.</p>
+        <p>본 서비스는 공공데이터를 기반으로 구축된 익명 서울 ·경기 지역 정보 커뮤니티 공간입니다.</p>
       </div>
     </footer>
 

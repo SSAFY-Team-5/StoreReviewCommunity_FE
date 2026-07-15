@@ -86,7 +86,6 @@
     <!-- 검증 확인 공용 컴포넌트 마운트 -->
     <PasswordModal 
       :show="showModal"
-      :correctPassword="post.password"
       @close="showModal = false"
       @confirm="onAuthConfirmed"
     />
@@ -114,16 +113,19 @@ const currentAction = ref(''); // 'edit', 'delete'
 const goBack = () => emit('back');
 
 const triggerAction = (action) => {
+  if (action === 'edit') {
+    emit('edit', props.post.id);
+    return;
+  }
+
   currentAction.value = action;
   showModal.value = true;
 };
 
-const onAuthConfirmed = () => {
+const onAuthConfirmed = (password) => {
   showModal.value = false;
-  if (currentAction.value === 'edit') {
-    emit('edit', props.post.id);
-  } else if (currentAction.value === 'delete') {
-    emit('delete', props.post.id);
+  if (currentAction.value === 'delete') {
+    emit('delete', { postId: props.post.id, password });
   }
 };
 

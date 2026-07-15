@@ -60,6 +60,7 @@
 <script setup>
 import { ref, computed, onMounted, watch, nextTick, onBeforeUnmount } from 'vue';
 import AppIcon from './AppIcon.vue';
+import { fetchStores, mapStoreApiItem } from '../services/api';
 
 const props = defineProps({
   modelValue: {
@@ -78,15 +79,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-// 모의 매장 정보 리스트 (의뢰서 기반 필수 랜드마크 데이터셋)
-const storesData = [
-  { id: 1, name: "더현대 서울 (The Hyundai Seoul)", address: "서울특별시 영등포구 여의대로 108", latitude: 37.5259, longitude: 126.9278 },
-  { id: 2, name: "롯데월드몰 (Lotte World Mall)", address: "서울특별시 송파구 올림픽로 300", latitude: 37.5137, longitude: 127.1044 },
-  { id: 3, name: "신세계백화점 본점", address: "서울특별시 중구 소공로 63", latitude: 37.5609, longitude: 126.9810 },
-  { id: 4, name: "스타필드 코엑스몰", address: "서울특별시 강남구 영동대로 513", latitude: 37.5117, longitude: 127.0592 },
-  { id: 5, name: "아이파크몰 용산점", address: "서울특별시 용산구 한강대로23길 55", latitude: 37.5294, longitude: 126.9639 },
-  { id: 6, name: "현대백화점 판교점", address: "경기도 성남시 분당구 판교역로146번길 20", latitude: 37.3925, longitude: 127.1120 }
-];
+const storesData = ref([]);
 
 const storeQuery = ref('');
 const showSuggestions = ref(false);
@@ -95,7 +88,7 @@ let markerInstance = null;
 
 const filteredStores = computed(() => {
   if (!storeQuery.value.trim()) return [];
-  return storesData.filter(store => 
+  return storesData.value.filter(store => 
     store.name.toLowerCase().includes(storeQuery.value.toLowerCase()) ||
     store.address.toLowerCase().includes(storeQuery.value.toLowerCase())
   );
@@ -178,6 +171,15 @@ watch(() => props.modelValue, (newVal) => {
 }, { deep: true });
 
 onMounted(() => {
+  void (async () => {
+    try {
+      const response = await fetchStores();
+      storesData.value = response.map(mapStoreApiItem);
+    } catch (error) {
+      storesData.value = [];
+    }
+  })();
+
   initMap();
   if (props.modelValue) {
     storeQuery.value = props.modelValue.name;

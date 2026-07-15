@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import StoreMap from '../components/StoreMap.vue';
 import AppIcon from '../components/AppIcon.vue';
 
@@ -97,12 +97,33 @@ const formData = ref({
   selectedStore: null
 });
 
-onMounted(() => {
+const syncEditData = () => {
   if (props.editData) {
     isEditMode.value = true;
-    formData.value = { ...props.editData };
+    formData.value = {
+      id: props.editData.id ?? null,
+      title: props.editData.title ?? '',
+      content: props.editData.content ?? '',
+      nickname: props.editData.nickname ?? '익명',
+      password: '',
+      selectedStore: props.editData.selectedStore ?? null
+    };
+  } else {
+    isEditMode.value = false;
+    formData.value = {
+      id: null,
+      title: '',
+      content: '',
+      nickname: '익명',
+      password: '',
+      selectedStore: null
+    };
   }
-});
+};
+
+onMounted(syncEditData);
+
+watch(() => props.editData, syncEditData, { deep: true });
 
 const handleCancel = () => {
   emit('cancel');
@@ -115,10 +136,10 @@ const handleSubmit = () => {
   if (!formData.value.password.trim()) return alert('비밀번호를 설정해 주세요.');
   if (!formData.value.title.trim()) return alert('제목을 적어주세요.');
   if (!formData.value.content.trim()) return alert('내용을 적어주세요.');
+  if (!formData.value.selectedStore) return alert('매장을 선택해 주세요.');
 
   emit('submit', {
-    ...formData.value,
-    storeName: formData.value.selectedStore ? formData.value.selectedStore.name : null
+    ...formData.value
   });
 };
 </script>

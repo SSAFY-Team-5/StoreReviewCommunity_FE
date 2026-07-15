@@ -70,7 +70,7 @@ const handleClose = () => {
 const handleConfirm = () => {
   if (passwordInput.value === props.correctPassword) {
     isError.value = false;
-    emit('confirm');
+    emit('confirm', passwordInput.value);
   } else {
     isError.value = true;
   }

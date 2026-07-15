@@ -114,6 +114,7 @@
 <script setup>
 import { ref, nextTick } from 'vue';
 import AppIcon from './AppIcon.vue';
+import { fetchChat, mapStoreApiItem } from '../services/api';
 
 const isOpen = ref(false);
 const chatInput = ref('');
@@ -124,15 +125,6 @@ const messages = ref([
   { sender: 'bot', text: '안녕하세요! ShopHub 스마트 도우미입니다. 쇼핑 매장에 관련된 유용한 정보를 바로 물어보세요! 😊', time: '오후 12:00' }
 ]);
 
-const storesData = [
-  { name: "더현대 서울 (The Hyundai Seoul)", address: "서울특별시 영등포구 여의대로 108" },
-  { name: "롯데월드몰 (Lotte World Mall)", address: "서울특별시 송파구 올림픽로 300" },
-  { name: "신세계백화점 본점", address: "서울특별시 중구 소공로 63" },
-  { name: "스타필드 코엑스몰", address: "서울특별시 강남구 영동대로 513" },
-  { name: "아이파크몰 용산점", address: "서울특별시 용산구 한강대로23길 55" },
-  { name: "현대백화점 판교점", address: "경기도 성남시 분당구 판교역로146번길 20" }
-];
-
 const toggleChat = () => {
   isOpen.value = !isOpen.value;
   if (isOpen.value) {
@@ -140,7 +132,7 @@ const toggleChat = () => {
   }
 };
 
-const sendMessage = () => {
+const sendMessage = async () => {
   const text = chatInput.value.trim();
   if (!text) return;
 
@@ -152,33 +144,28 @@ const sendMessage = () => {
   isTyping.value = true;
   scrollToBottom();
 
-  // 지능형 모의 가이드봇 응답 프로세스
-  setTimeout(() => {
-    let answer = "";
-    const lowerText = text.toLowerCase();
-
-    if (lowerText.includes("더현대") || lowerText.includes("현대백화점")) {
-      answer = `여의도 "더현대 서울" 지도를 가이드해 드립니다. 🛒\n- 주소: 서울특별시 영등포구 여의대로 108\n- 영업시간: 월-목 10:30~20:00 / 금-일 10:30~20:30`;
-    } else if (lowerText.includes("코엑스") || lowerText.includes("스타필드")) {
-      answer = `삼성동 "스타필드 코엑스몰" 입니다. 📚\n- 주소: 서울특별시 강남구 영동대로 513\n- 볼거리: 별마당 도서관 및 아쿠아리움`;
-    } else if (lowerText.includes("목록") || lowerText.includes("매장") || lowerText.includes("추천")) {
-      answer = `ShopHub에서 지도 연동을 지원하는 랜드마크 쇼핑 매장 목록입니다.\n\n` + 
-        storesData.map(s => `• ${s.name}\n  (${s.address})`).join('\n\n');
-    } else if (lowerText.includes("장점") || lowerText.includes("서비스") || lowerText.includes("스택")) {
-      answer = `ShopHub는 광고 없는 순수 익명 쇼핑 정보 교환을 추구합니다.\n- 최신 고속 로딩 스펙: Vue 3.0 Composition API 기반 단일 페이지 렌더링\n- 지도 동적 바인딩: Leaflet.js 활용`;
-    } else {
-      answer = `질문하신 내용의 오프라인 상세 쇼핑 정보는 현재 준비 중입니다.\n대신 "인기 쇼핑몰 목록 알려줘" 또는 "더현대 알려줘" 라고 입력하시면 바로 상세 정보를 조회해 드릴게요!`;
-    }
+  try {
+    const response = await fetchChat(text);
+    const mappedStores = (response.stores ?? []).map(mapStoreApiItem);
+    const storeText = mappedStores.length
+      ? `\n\n추천 매장\n${mappedStores.map(store => `• ${store.name}\n  ${store.address}`).join('\n\n')}`
+      : '';
 
     messages.value.push({
       sender: 'bot',
-      text: answer,
+      text: `${response.answer}${storeText}`,
       time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
     });
-
+  } catch (error) {
+    messages.value.push({
+      sender: 'bot',
+      text: error instanceof Error ? error.message : '챗봇 응답을 불러오지 못했습니다.',
+      time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+    });
+  } finally {
     isTyping.value = false;
     scrollToBottom();
-  }, 800);
+  }
 };
 
 const scrollToBottom = () => {

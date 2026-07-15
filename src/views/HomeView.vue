@@ -157,7 +157,6 @@ const filteredPosts = computed(() => {
     const query = activeSearchKeyword.value.toLowerCase().trim();
     list = list.filter(post => 
       post.title.toLowerCase().includes(query) ||
-      post.content.toLowerCase().includes(query) ||
       (post.storeName && post.storeName.toLowerCase().includes(query))
     );
   }

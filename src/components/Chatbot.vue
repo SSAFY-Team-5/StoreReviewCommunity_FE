@@ -4,7 +4,7 @@
     <button 
       v-if="!isOpen" 
       @click="toggleChat"
-      class="w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl hover:shadow-indigo-200 transition-all duration-300 flex items-center justify-center relative active:scale-95 group"
+      class="w-14 h-14 bg-violet-500 hover:bg-violet-600 text-white rounded-full shadow-lg hover:shadow-xl hover:shadow-violet-200 transition-all duration-300 flex items-center justify-center relative active:scale-95 group"
     >
       <span class="absolute -top-1.5 -right-1 flex h-4 w-4">
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
@@ -63,7 +63,7 @@
                 :class="[
                   'rounded-2xl px-3.5 py-2 text-xs shadow-sm leading-relaxed',
                   msg.sender === 'user' 
-                    ? 'bg-indigo-600 text-white rounded-tr-none' 
+                    ? 'bg-violet-500 text-white rounded-tr-none' 
                     : 'bg-white text-slate-800 border border-slate-200/80 rounded-tl-none'
                 ]"
               >
@@ -102,7 +102,7 @@
         >
         <button 
           @click="sendMessage" 
-          class="w-8 h-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl flex items-center justify-center transition-colors shadow-md shadow-indigo-100"
+          class="w-8 h-8 bg-violet-500 hover:bg-violet-600 text-white rounded-xl flex items-center justify-center transition-colors shadow-md shadow-violet-100"
         >
           <AppIcon name="send" size="0.9em" />
         </button>

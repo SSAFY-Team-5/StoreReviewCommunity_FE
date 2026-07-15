@@ -202,7 +202,7 @@ onMounted(() => {
           </div>
           <button 
             @click="goWrite" 
-            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-100"
+            class="px-4 py-2 bg-violet-500 hover:bg-violet-600 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-violet-100"
           >
             <AppIcon name="pencil" size="0.95em" class="mr-1 inline-block align-[-0.125em]" />새 리뷰 작성
           </button>

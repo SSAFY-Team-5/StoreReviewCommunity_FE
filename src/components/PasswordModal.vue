@@ -28,7 +28,7 @@
         <button @click="handleClose" class="flex-1 py-2.5 text-xs font-bold border border-slate-200 hover:bg-slate-50 rounded-xl text-slate-600 transition-all">
           취소
         </button>
-        <button @click="handleConfirm" class="flex-1 py-2.5 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md shadow-indigo-100 transition-all">
+        <button @click="handleConfirm" class="flex-1 py-2.5 text-xs font-bold bg-violet-500 hover:bg-violet-600 text-white rounded-xl shadow-md shadow-violet-100 transition-all">
           확인
         </button>
       </div>

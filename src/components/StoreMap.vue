@@ -1,13 +1,13 @@
 <template>
   <div class="space-y-3">
     <!-- 검색창 입력 영역 -->
-    <div class="relative" v-if="!disabled">
+    <div class="relative " v-if="!disabled">
       <input 
         v-model="storeQuery" 
         @input="handleInput"
         type="text" 
         placeholder="매장 이름 검색 (예: 현대, 롯데, 신세계, 스타필드 등)" 
-        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all font-medium"
+        class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all font-medium"
       >
       <!-- 검색 자동완성 드롭다운 -->
       <div v-if="filteredStores.length > 0 && showSuggestions" class="absolute z-[1001] w-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-lg max-h-56 overflow-y-auto divide-y divide-slate-100">

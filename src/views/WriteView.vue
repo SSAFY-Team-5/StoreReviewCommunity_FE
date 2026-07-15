@@ -65,7 +65,7 @@
         <button type="button" @click="handleCancel" class="px-5 py-2.5 border border-slate-300 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-all">
           취소하기
         </button>
-        <button type="button" @click="handleSubmit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-100">
+        <button type="button" @click="handleSubmit" class="px-6 py-2.5 bg-violet-500 hover:bg-violet-600 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-violet-100">
           {{ isEditMode ? '리뷰 수정 완료' : '리뷰 등록 완료' }}
         </button>
       </div>

@@ -40,7 +40,7 @@
       <button
         type="button"
         @click="triggerSearch"
-        class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition-all shadow-sm shadow-indigo-100 self-start md:self-auto"
+        class="px-5 py-3 bg-violet-500 hover:bg-violet-600 text-white rounded-xl text-sm font-semibold transition-all shadow-sm shadow-violet-100 self-start md:self-auto"
       >
         검색
       </button>
@@ -103,7 +103,7 @@
         </div>
         <h4 class="text-sm font-bold text-slate-900 mb-1">검색 결과나 작성된 게시글이 없습니다.</h4>
         <p class="text-xs text-slate-400 max-w-sm mb-4">첫 번째 쇼핑 후기 또는 아이템 리뷰를 남겨보세요!</p>
-        <button @click="emitWrite" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all">
+        <button @click="emitWrite" class="bg-violet-500 hover:bg-violet-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all">
           첫 글 쓰기
         </button>
       </div>
@@ -124,7 +124,7 @@
             @click="currentPage = p"
             :class="[
               'w-8 h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-colors',
-              currentPage === p ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-600 border border-slate-200 hover:bg-slate-50'
+              currentPage === p ? 'bg-violet-500 text-white shadow-md shadow-violet-100' : 'text-slate-600 border border-slate-200 hover:bg-slate-50'
             ]"
           >
             {{ p }}
